@@ -8,9 +8,9 @@ mongoose
     { useNewUrlParser: true }
   )
   .then(() => console.log('MongoDB Connected'))
-  .then(() =>{
-    SeedDB()
-  })
+  // .then(() =>{
+  //   SeedDB()
+  // })
   .catch(err => console.log(err));
 const server = express();
 server.use(express.json());
