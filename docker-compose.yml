@@ -1,18 +1,28 @@
-version: '3'
+version: '3.7'
 services:
   node:
     restart: always
     build: .
+    environment:
+      - MONGO_URI=mongodb://mongodb-myapp:27018/myapp
     ports:
       - 80:5000
     volumes:
-      - ./:/code
-  mongo:
+      - type: bind
+        source: .
+        target: /code
+    working_dir: /code
+    depends_on:
+      - "mongodb-myapp"
+  mongodb-myapp:
     image: mongo
+    # environment:
+    #   - MONGO_INITDB_ROOT_USERNAME=dev
+    #   - MONGO_INITDB_ROOT_PASSWORD=dev
     ports:
-      - 27018:27017
-    volumes:
-      - mongodb:/data/db
+      - 27017:27017
+    # volumes:
+    #   - mongodb:/data/db
 volumes:
  mongodb:
 
