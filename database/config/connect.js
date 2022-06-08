@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 mongoose
   .connect(
-    'mongodb://mongo:27017/cycle',
+    "mongodb://mongodb-myapp:27017/myapp",
     { useNewUrlParser: true }
   )
   .then(() => console.log('MongoDB Connected'))
