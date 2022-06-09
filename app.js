@@ -1,4 +1,6 @@
 require('dotenv').config();
+const mongoose = require('mongoose');
+const { SeedDB } = require("./database/seeders/user/user")
 mongoose
   .connect(
     "mongodb://mongodb-myapp:27017/myapp",
