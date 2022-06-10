@@ -7,7 +7,25 @@ const {
     updateUser,
     deleteUser
 } = require('../controllers/user/user');
+const {
+    getAllProducts
+} = require('../controllers/product/product');
 const { check } = require('express-validator');
+
+
+const jwt = require('jsonwebtoken');
+
+function authenticateToken(req, res, next) {
+    const authHeader = req.headers['authorization']
+    const token = authHeader && authHeader.split(' ')[1]
+    if (token == null) return res.sendStatus(401)
+    jwt.verify(token, process.env.TOKEN_SECRET, async (err, user) => {
+        if (err) return res.sendStatus(403)
+        req.user = user
+        req.token = token
+        next()
+    })
+}
 
 const { loginUser } = require("../controllers/auth/login")
 const { logoutUser } = require("../controllers/auth/logout")
@@ -18,9 +36,9 @@ router.get('/', (req, res) => res.send('Welcome'))
 // User Routes
 
 
-router.get('/users', getAllUsers);
-router.get('/users/:userId', getUserById);
-router.post('/users', [
+router.get('/users', authenticateToken, getAllUsers);
+router.get('/users/:userId', authenticateToken, getUserById);
+router.post('/users', authenticateToken, [
     check('name').isAlphanumeric().isLength({ min: 3, max: 20 }),
     check('phoneNumber', 'Mobile number should contains 10 digits').isMobilePhone().isLength(10),
     check('email').isEmail(),
@@ -32,16 +50,18 @@ router.post('/users', [
         )
 ], createUser);
 
-router.put('/users', updateUser);
-router.delete('/users',[
-    check("userId","User id should be like 25ad28f2-487c-4951-9bc1-7668f02fd1b8").isLength({min:1})
+router.put('/users', authenticateToken, updateUser);
+
+router.delete('/users', authenticateToken, [
+    check("userId", "User id should be like 25ad28f2-487c-4951-9bc1-7668f02fd1b8").isLength({ min: 1 }),
 ], deleteUser);
 
-// router.post('/Prooducts', controllers.createProoduct);
-// router.get('/Prooducts', controllers.getAllProoducts);
-// router.get('/Prooducts/:ProoductId', controllers.getProoductById);
-// router.put('/Prooducts/:ProoductId', controllers.updateProoduct);
-// router.delete('/Prooducts/:ProoductId', controllers.deleteProoduct);
+
+router.get('/products', authenticateToken, getAllProducts);
+// router.get('/products/:ProoductId', authenticateToken, controllers.getProoductById);
+// router.post('/products', authenticateToken, controllers.createProoduct);
+// router.put('/products/:ProoductId', authenticateToken, controllers.updateProoduct);
+// router.delete('/products/:ProoductId', authenticateToken, controllers.deleteProoduct);
 
 // Auth Routes
 
@@ -49,10 +69,8 @@ router.post('/login', [
     check('email').isEmail(),
     check('password').isAlphanumeric()
 ], loginUser)
-router.post('/logout', [
-    check('email').isEmail(),
-    check('password').isAlphanumeric()
-], logoutUser)
+
+router.post('/logout', authenticateToken, logoutUser)
 
 router.get('*', function (req, res, next) {
     res.status(301).redirect('/not-found');

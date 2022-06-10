@@ -1,17 +1,18 @@
 const res = require('express/lib/response');
 const User = require('../../database/models/user');
 const { check, validationResult } = require('express-validator');
-
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
+dotenv.config();
 const logoutUser = async (req, res) => {
-    const errors = validationResult(req)
-    if (!errors.isEmpty()) {
-        return res.status(422).json({ errors: errors.array() })
+    const { exp, data: email, iat } = req.user
+    const token = req.token
+    const isUserExits = await User.exists({ email: email, authToken: token })
+    if (!isUserExits) res.status(400).json({ Msg: "Invalid Auth Token" })
+    else {
+        var user = await User.findOneAndUpdate({ email: email }, { authToken: "" })
+        res.send(`${user.name} successfully logged out`)
     }
-    const { email, password } = req.body;
-    const getUser = await User.findOne({ email: email });
-    if (!getUser) res.send("User doesn't exist");
-    if (getUser.password !== password) res.send("passwoord is incorrect");
-    res.send(getUser)
 };
 
 
