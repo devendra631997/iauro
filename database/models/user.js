@@ -22,7 +22,7 @@ const UserSchema = new Schema({
         type: Number,
     },
     isAdmin: {
-        type: String,
+        type: Boolean,
         required: true,
         default: false
     },
