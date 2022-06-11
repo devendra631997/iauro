@@ -13,7 +13,7 @@ const {
     createProduct,
     deleteProduct
     , } = require('../controllers/product/product');
-const { check } = require('express-validator');
+const { check, body } = require('express-validator');
 
 
 const jwt = require('jsonwebtoken');
@@ -55,7 +55,15 @@ router.post('/users', authenticateToken, [
         )
 ], createUser);
 
-router.put('/users', authenticateToken, updateUser);
+router.put('/users/:userId', authenticateToken,
+    [
+        check('name').optional({ checkFalsy: true, nullable: true }).isLength({ min: 3 }).withMessage('Please enter minimum 10 characters'),
+        check('password').optional({ checkFalsy: true, nullable: true }).isLength({ min: 8, max: 50 })
+            .matches(
+                /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[a-zA-Z\d@$.!%*#?&]/,
+            ).withMessage(`Password should be combination of one uppercase,
+            one lower case, one special char, one digit and min 8, max 50 char long`)
+    ], updateUser);
 
 router.delete('/users', authenticateToken, [
     check("userId", "User id should be like 25ad28f2-487c-4951-9bc1-7668f02fd1b8").isLength({ min: 1 }),
