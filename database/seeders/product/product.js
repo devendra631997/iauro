@@ -20,8 +20,12 @@ const seedProduct = [
     }
 ];
 const SeedProducts = async () => {
-    await Product.deleteMany({});
-    await Product.insertMany(seedProduct);
+    try {
+        await Product.deleteMany({});
+        await Product.insertMany(seedProduct);
+    } catch (error) {
+        console.log(error)
+    }
 };
 
 

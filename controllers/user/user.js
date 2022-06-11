@@ -46,6 +46,7 @@ const getAllUsers = async (req, res) => {
 const getUserById = async (req, res) => {
   try {
     const { userId } = req.params;
+    console.log("userId-------------------------->",userId)
     const isUserExits = await User.exists({ id: userId.replace(":", "") })
     if (!isUserExits) res.status(400).json({ Msg: "User does not exists" })
     res.send(await User.find({ id: userId.replace(":", "") }, { name: 1, email: 1, phoneNumber: 1, isAdmin: 1 }))
