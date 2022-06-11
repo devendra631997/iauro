@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node app.js",
-    "test": "jest --config ./jest.config.json",
+    "test": "jest --config ./jest.config.json --testTimeout=10000",
     "test:watch": "npm run test -- --watch"
   },
   "repository": {
