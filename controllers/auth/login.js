@@ -7,7 +7,6 @@ dotenv.config();
 
 function generateAccessToken(email) {
     // return jwt.sign(email, process.env.TOKEN_SECRET, { expiresIn: '1h' });
-
     return jwt.sign({
         exp: Math.floor(Date.now() / 1000) + (60*60),
         data: email
