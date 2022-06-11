@@ -8,7 +8,7 @@ dotenv.config();
 function generateAccessToken(email) {
     // return jwt.sign(email, process.env.TOKEN_SECRET, { expiresIn: '1h' });
     return jwt.sign({
-        exp: Math.floor(Date.now() / 1000) + (60*60),
+        exp: Math.floor(Date.now() / 1000) + (60 * 60),
         data: email
     }, process.env.TOKEN_SECRET);
 }
@@ -28,7 +28,7 @@ const loginUser = async (req, res, next) => {
         // GENERATE A AUTH TOKEN. EVERY TIME NEW TOKEN
         const authToken = generateAccessToken(email)
         await User.findOneAndUpdate({ email: email, password: password }, { authToken: authToken })
-        res.send(authToken)
+        res.status(200).json({ Token: authToken })
     } catch (error) {
         res.send(error)
     }
