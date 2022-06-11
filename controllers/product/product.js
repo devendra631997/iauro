@@ -62,6 +62,35 @@ const createProduct = async (req, res, next) => {
     }
 };
 
+const updateProduct = async (req, res) => {
+    try {
+        const errors = validationResult(req)
+        if (!errors.isEmpty()) {
+            return res.status(422).json({ errors: errors.array() })
+        }
+        const isUserExits = await User.exists({ email: req.user.data, authToken: req.token })
+        if (!isUserExits) return res.sendStatus(403)
+        var { name } = req.body
+        // Body cannot be Empty, You can update name. You should send name
+        if (!name) return res.status(422).json({ msg: "You can only update name. You should send" })
+        const { productId } = req.params;
+        // check product exist
+        const isProductExits = await Product.exists({ id: productId.replace(":", "") })
+        if (!isProductExits) return res.status(400).json({ Msg: "Product does not exists" })
+        const product = await Product.findOne({ id: productId.replace(":", "") })
+        // verify token, whose token is ......
+        const user = await User.findOne({ email: req.user.data, authToken: req.token })
+        if (!user.isAdmin && user.id != product.addedBy) return res.status(401).send("Unauthorised")
+        //  body can have name because only these are changable
+        // create object to update the product
+        const isProductUpdated = await Product.findOneAndUpdate({id: productId.replace(":", "")},{name:name})
+        res.status(200).json({ msg: `${productId.replace(":", "")} has been updated`, result: isProductUpdated })
+    } catch (error) {
+        res.status(500).json({ Msg: error })
+    }
+};
+
+
 const deleteProduct = async (req, res, next) => {
     try {
         const { productId } = req.params;
@@ -83,5 +112,6 @@ module.exports = {
     getAllProducts,
     getProductById,
     createProduct,
+    updateProduct,
     deleteProduct
 };

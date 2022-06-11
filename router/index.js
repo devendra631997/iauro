@@ -11,6 +11,7 @@ const {
     getAllProducts,
     getProductById,
     createProduct,
+    updateProduct,
     deleteProduct
     , } = require('../controllers/product/product');
 const { check, body } = require('express-validator');
@@ -79,7 +80,9 @@ router.post('/products', authenticateToken, [
     check("name", "Length of name should be graeter than 4").isLength({ min: 4 }),
 ], createProduct);
 
-// router.put('/products/:productId', authenticateToken, controllers.updateProoduct);
+router.put('/products/:productId', authenticateToken, [
+    check("name", "Length of name should be graeter than 4").isLength({ min: 4 }),
+],updateProduct);
 
 router.delete('/products/:productId', authenticateToken, deleteProduct);
 
