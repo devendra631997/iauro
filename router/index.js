@@ -8,8 +8,11 @@ const {
     deleteUser
 } = require('../controllers/user/user');
 const {
-    getAllProducts
-} = require('../controllers/product/product');
+    getAllProducts,
+    getProductById,
+    createProduct,
+    deleteProduct
+    , } = require('../controllers/product/product');
 const { check } = require('express-validator');
 
 
@@ -37,7 +40,9 @@ router.get('/', (req, res) => res.send('Welcome'))
 
 
 router.get('/users', authenticateToken, getAllUsers);
+
 router.get('/users/:userId', authenticateToken, getUserById);
+
 router.post('/users', authenticateToken, [
     check('name').isAlphanumeric().isLength({ min: 3, max: 20 }),
     check('phoneNumber', 'Mobile number should contains 10 digits').isMobilePhone().isLength(10),
@@ -57,11 +62,27 @@ router.delete('/users', authenticateToken, [
 ], deleteUser);
 
 
+
+
+router.get('/products/:productId', authenticateToken, getProductById);
+
 router.get('/products', authenticateToken, getAllProducts);
-// router.get('/products/:ProoductId', authenticateToken, controllers.getProoductById);
-// router.post('/products', authenticateToken, controllers.createProoduct);
-// router.put('/products/:ProoductId', authenticateToken, controllers.updateProoduct);
-// router.delete('/products/:ProoductId', authenticateToken, controllers.deleteProoduct);
+router.post('/products', authenticateToken, [
+    check("name", "Length of name should be graeter than 4").isLength({ min: 4 }),
+], createProduct);
+
+// router.put('/products/:productId', authenticateToken, controllers.updateProoduct);
+
+router.delete('/products/:productId', authenticateToken, deleteProduct);
+
+
+
+
+
+
+
+
+
 
 // Auth Routes
 
