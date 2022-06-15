@@ -13,3 +13,12 @@ Databases:
 
     User data
     Product data
+    
+    
+ ### To run the project
+ 
+ npm install
+ npm start
+ 
+ #### if docker-compoese is installed
+ docker-compose up --build
