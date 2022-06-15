@@ -7,12 +7,12 @@ describe('Users Endpoints', () => {
             .get('/api')
         expect(res.statusCode).toEqual(200);
     });
-    // it('/login post', async () => {
-    //     const res = await request(app)
-    //         .post('/api/login').send({
-    //             "email": "user@user.com",
-    //             "password": "123456789"
-    //         })
-    //     expect(res.statusCode).toEqual(200);
-    // });
+    it('/login post', async () => {
+        const res = await request(app)
+            .post('/api/login').send({
+                "email": "user@user.com",
+                "password": "123456789"
+            })
+        expect(res.statusCode).toEqual(200);
+    });
 });

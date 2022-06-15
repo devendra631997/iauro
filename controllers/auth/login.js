@@ -22,7 +22,7 @@ const loginUser = async (req, res, next) => {
         }
         const { email, password } = req.body;
         const isUserExits = await User.exists({ email: email })
-        if (!isUserExits) res.status(400).json({ Msg: "User does not exists" })
+        if (!isUserExits) return res.status(400).json({ Msg: "User does not exists" })
         const getUser = await User.findOne({ email: email })
         if (getUser.password !== password) res.send("passwoord is incorrect");
         // GENERATE A AUTH TOKEN. EVERY TIME NEW TOKEN

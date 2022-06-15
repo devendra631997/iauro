@@ -36,15 +36,13 @@ const { logoutUser } = require("../controllers/auth/logout")
 
 router.get('/', (req, res) => res.send('Welcome'))
 
-
 // User Routes
-
 
 router.get('/users', authenticateToken, getAllUsers);
 
 router.get('/users/:userId', authenticateToken, getUserById);
 
-router.post('/users', authenticateToken, [
+router.post('/users',  [
     check('name').isAlphanumeric().isLength({ min: 3, max: 20 }),
     check('phoneNumber', 'Mobile number should contains 10 digits').isMobilePhone().isLength(10),
     check('email').isEmail(),
@@ -70,8 +68,7 @@ router.delete('/users', authenticateToken, [
     check("userId", "User id should be like 25ad28f2-487c-4951-9bc1-7668f02fd1b8").isLength({ min: 1 }),
 ], deleteUser);
 
-
-
+// Products Route
 
 router.get('/products/:productId', authenticateToken, getProductById);
 
@@ -82,24 +79,15 @@ router.post('/products', authenticateToken, [
 
 router.put('/products/:productId', authenticateToken, [
     check("name", "Length of name should be graeter than 4").isLength({ min: 4 }),
-],updateProduct);
+], updateProduct);
 
 router.delete('/products/:productId', authenticateToken, deleteProduct);
-
-
-
-
-
-
-
-
-
 
 // Auth Routes
 
 router.post('/login', [
     check('email').isEmail(),
-    check('password').isAlphanumeric()
+    check('password')
 ], loginUser)
 
 router.post('/logout', authenticateToken, logoutUser)
